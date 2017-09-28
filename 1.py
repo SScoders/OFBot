@@ -41,7 +41,7 @@ def handle_start_help(message):
     user_markup.row('/help', '/stop')
     user_markup.row('Пицца', 'Вода')
     user_markup.row('Суши', 'Кола')
-
+    user_markup.row('Карзина')
     if message.text == '/start' or message.text == '/help':
         bot.send_message(message.chat.id, """Что бы произвести заказ продукции вы должны ввести название продукта, который вы хотите преобрести.
 Если Бот отвечает ??? - это значит, что такого товара нет в базе данных.""")
@@ -63,6 +63,7 @@ def handle_text(message):
             message_id = 2
         if message.text == 'Вода' or message.text == 'вода':
             message_id = 3
+
 
         if message_id == 1:
             c.execute('SELECT * FROM pizza')
