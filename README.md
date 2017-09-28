@@ -1,2 +1,0 @@
-# OFBot
-Bot for Telgram
