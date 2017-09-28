@@ -189,3 +189,4 @@ def handle_sticker(message):
     bot.send_message(message.chat.id, log_answer)
 
 bot.polling(none_stop=True, interval=0)
+qqwqw
