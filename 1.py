@@ -28,23 +28,23 @@ def log(log_answer, message):
                                                                       message.text))
     print("------------------------------------------------------------------")
 
-
+        
 @bot.message_handler(commands=['start', 'help', 'stop'])
 def handle_start_help(message):
     global state
     log_answer = """Что бы произвести заказ продукции вы должны ввести название продукта, который вы хотите преобрести.
-Если Бот отвечает ??? - это значит, что такого товара нет в базе данных.
+Если Бот отвечает \"???\" - это значит, что такого товара нет в базе данных.
 Введите вид товара!"""
     log(log_answer, message)
 
     user_markup = telebot.types.ReplyKeyboardMarkup(True, False)
     user_markup.row('/help', '/stop')
-    user_markup.row('Пицца', 'Вода')
+    user_markup.row('🍕Пицца🍕', '🥛Вода🥛')
     user_markup.row('Суши', 'Кола')
-    user_markup.row('Корзина')
+    user_markup.row('👝Корзина👝')
     if message.text == '/start' or message.text == '/help':
         bot.send_message(message.chat.id, """Что бы произвести заказ продукции вы должны ввести название продукта, который вы хотите преобрести.
-Если Бот отвечает ??? - это значит, что такого товара нет в базе данных.""")
+Если Бот отвечает \"???\" - это значит, что такого товара нет в базе данных.""")
     bot.send_message(message.chat.id, "Что вы хотите?", reply_markup=user_markup)
     state = 0
 
@@ -57,11 +57,11 @@ def handle_text(message):
         conn = sqlite3.connect('baza.sqlite')
         c = conn.cursor()
 
-        if message.text == 'Пицца' or message.text == 'пицца':
+        if message.text == 'Пицца' or message.text == 'пицца'  or message.text == '🍕Пицца🍕':
             message_id = 1
-        if message.text == 'Суши' or message.text == 'суши':
+        if message.text == 'Суши' or message.text == 'суши'  or message.text == 'суши':
             message_id = 2
-        if message.text == 'Вода' or message.text == 'вода':
+        if message.text == 'Вода' or message.text == 'вода' or message.text == '🥛Вода🥛':
             message_id = 3
 
 
@@ -79,7 +79,7 @@ def handle_text(message):
                     row = c.fetchone()
                 else:
                     user_markup.row(row_a)
-            bot.send_message(message.chat.id, "Введите название пиццы, которую вы хотите приобрести.",
+            bot.send_message(message.chat.id, "Выберитец название пиццы, которую вы хотите приобрести.",
                              reply_markup=user_markup)
 
         if message_id == 2:
@@ -169,8 +169,9 @@ def handle_text(message):
         if arc == 1:
             user_markup = telebot.types.ReplyKeyboardMarkup(True, False)
             user_markup.row('/help', '/stop')
-            user_markup.row('Пицца', 'Вода')
+            user_markup.row('🍕Пицца🍕', '🥛Вода🥛')
             user_markup.row('Суши', 'Кола')
+            user_markup.row('👝Корзина👝')
             bot.send_message(message.chat.id, "#REFRESH", reply_markup=user_markup)
             state = 0
         return 0
@@ -178,7 +179,7 @@ def handle_text(message):
 
 @bot.message_handler(content_types=['document', 'audio', 'photo', 'video', 'voice'])
 def handle_docs_audio_photo_video_voice(message):
-    log_answer = "???"
+    log_answer = "этого товара несуществует"
     log(log_answer, message)
     bot.send_message(message.chat.id, log_answer)
 
