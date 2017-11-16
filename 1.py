@@ -1,7 +1,7 @@
 # OF Bot
 
 """
-Version - 4.5
+Version - 4.6
 With this bot you can fast and easly order food.
 Based on SQLite base.
 """
@@ -12,7 +12,7 @@ import sqlite3
 state = 0
 bot = telebot.TeleBot(constains.token)
 message_id = 0
-
+karzina = ''
 print("------------------------------------------------------------------")
 print(bot.get_me())
 print("------------------------------------------------------------------")
@@ -53,6 +53,7 @@ def handle_start_help(message):
 def handle_text(message):
     global state
     global message_id
+    global karzina
     if state == 0:
         conn = sqlite3.connect('baza.sqlite')
         c = conn.cursor()
@@ -63,7 +64,8 @@ def handle_text(message):
             message_id = 2
         if message.text == 'Вода' or message.text == 'вода' or message.text == '🥛Вода🥛':
             message_id = 3
-
+        if message.text == '👝Корзина👝' or message.text == 'Корзина' or message.text == 'корзина':
+            message_id = 4
 
         if message_id == 1:
             c.execute('SELECT * FROM pizza')
@@ -112,7 +114,8 @@ def handle_text(message):
                     user_markup.row(row_a)
             bot.send_message(message.chat.id, "Введите марку воды, которую вы хотите приобрести.",
                              reply_markup=user_markup)
-
+        if message_id == 4:
+            bot.send_message(message.chat.id, karzina)
         if message_id == 0:
             bot.send_message(message.chat.id, "Что вы хотите?")
         else:
@@ -143,6 +146,7 @@ def handle_text(message):
             if row[0] == input_name:
                 bot.send_message(message.chat.id, "Наименование: " + row[0] + " | Стоимость: " + str(row[1]) +
                                  " | Вес: " + str(row[2]))
+                karzina += "Наименование: " + row[0] + " | Стоимость: " + str(row[1]) + " | Вес: " + str(row[2])
                 bot.send_message(message.chat.id, "Устраивает ли вас этот товар? ", reply_markup=user_markup)
                 state = 2
             row = c.fetchone()
