@@ -9,6 +9,7 @@ Based on SQLite base.
 import telebot
 import constains
 import sqlite3
+
 state = 0
 bot = telebot.TeleBot(constains.token)
 message_id = 0
@@ -23,12 +24,12 @@ def log(log_answer, message):
     print("Мой вопрос - " + log_answer)
     print(datetime.now())
     print("Сообщение от {0} {1}. (id = {2}) \nСообщение пользователя - {3}".format(message.from_user.first_name,
-                                                                   message.from_user.last_name,
-                                                                   message.from_user.id,
-                                                                      message.text))
+                                                                                   message.from_user.last_name,
+                                                                                   message.from_user.id,
+                                                                                   message.text))
     print("------------------------------------------------------------------")
 
-        
+
 @bot.message_handler(commands=['start', 'help', 'stop'])
 def handle_start_help(message):
     global state
@@ -58,9 +59,9 @@ def handle_text(message):
         conn = sqlite3.connect('baza.sqlite')
         c = conn.cursor()
 
-        if message.text == 'Пицца' or message.text == 'пицца'  or message.text == '🍕Пицца🍕':
+        if message.text == 'Пицца' or message.text == 'пицца' or message.text == '🍕Пицца🍕':
             message_id = 1
-        if message.text == 'Суши' or message.text == 'суши'  or message.text == 'суши':
+        if message.text == 'Суши' or message.text == 'суши' or message.text == 'суши':
             message_id = 2
         if message.text == 'Вода' or message.text == 'вода' or message.text == '🥛Вода🥛':
             message_id = 3
@@ -116,7 +117,8 @@ def handle_text(message):
                              reply_markup=user_markup)
         if message_id == 4:
             bot.send_message(message.chat.id, karzina)
-        if message_id == 0:
+            log("Отправленна корзина", message)
+        elif message_id == 0:
             bot.send_message(message.chat.id, "Что вы хотите?")
         else:
             log("Введите название товара!", message)
@@ -146,7 +148,7 @@ def handle_text(message):
             if row[0] == input_name:
                 bot.send_message(message.chat.id, "Наименование: " + row[0] + " | Стоимость: " + str(row[1]) +
                                  " | Вес: " + str(row[2]))
-                karzina += "Наименование: " + row[0] + " | Стоимость: " + str(row[1]) + " | Вес: " + str(row[2])
+                karzina += "Наименование: " + row[0] + " | Стоимость: " + str(row[1]) + " | Вес: " + str(row[2]) + "\n"
                 bot.send_message(message.chat.id, "Устраивает ли вас этот товар? ", reply_markup=user_markup)
                 state = 2
             row = c.fetchone()
@@ -183,7 +185,7 @@ def handle_text(message):
 
 @bot.message_handler(content_types=['document', 'audio', 'photo', 'video', 'voice'])
 def handle_docs_audio_photo_video_voice(message):
-    log_answer = "этого товара несуществует"
+    log_answer = "Этого товара несуществует"
     log(log_answer, message)
     bot.send_message(message.chat.id, log_answer)
 
@@ -193,5 +195,6 @@ def handle_sticker(message):
     log_answer = ")))"
     log(log_answer, message)
     bot.send_message(message.chat.id, log_answer)
+
 
 bot.polling(none_stop=True, interval=0)
