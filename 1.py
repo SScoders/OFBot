@@ -1,7 +1,7 @@
 '''OF Bot'''
 
 """
-Version - 4.миллион
+Version - 4.2
 With this bot you can fast and easly order food.
 Based on SQLite base.
 """
