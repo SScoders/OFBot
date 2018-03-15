@@ -1,7 +1,7 @@
-# OF Bot
+'''OF Bot'''
 
 """
-Version - 4.6
+Version - 4.миллион
 With this bot you can fast and easly order food.
 Based on SQLite base.
 """
@@ -10,7 +10,7 @@ import telebot
 import constains
 import sqlite3
 
-state = 0
+state = -1
 bot = telebot.TeleBot(constains.token)
 message_id = 0
 karzina = ''
@@ -38,16 +38,23 @@ def handle_start_help(message):
 Введите вид товара!"""
     log(log_answer, message)
 
+
+
+
+    '''создание меню'''
     user_markup = telebot.types.ReplyKeyboardMarkup(True, False)
     user_markup.row('/help', '/stop')
-    user_markup.row('🍕Пицца🍕', '🥛Вода🥛')
-    user_markup.row('Суши', 'Кола')
-    user_markup.row('👝Корзина👝')
+    user_markup.row('продукты', 'корзина')
+    '''конец создания меню'''
+
+
+
+
     if message.text == '/start' or message.text == '/help':
         bot.send_message(message.chat.id, """Что бы произвести заказ продукции вы должны ввести название продукта, который вы хотите преобрести.
 Если Бот отвечает \"???\" - это значит, что такого товара нет в базе данных.""")
     bot.send_message(message.chat.id, "Что вы хотите?", reply_markup=user_markup)
-    state = 0
+    state = -1
 
 
 @bot.message_handler(content_types=['text'])
@@ -55,6 +62,21 @@ def handle_text(message):
     global state
     global message_id
     global karzina
+    if state == -1:
+        if message.text == 'продукты':
+            user_markup = telebot.types.ReplyKeyboardMarkup(True, False)
+            user_markup.row('/help', '/stop')
+            user_markup.row('🍕Пицца🍕', '🥛Вода🥛')
+            user_markup.row('Суши', 'Кола')
+            user_markup.row('👝Корзина👝')
+            bot.send_message(message.chat.id, "#REFRESH", reply_markup=user_markup)
+            state = 0
+        elif message.text == 'карзина':
+            user_markup = telebot.types.ReplyKeyboardMarkup(True, False)
+            bot.send_message(message.chat.id, karzina, reply_markup=user_markup)
+            user_markup.row('/help', '/stop')
+            user_markup.row('продукты', 'карзина')
+            state = -1
     if state == 0:
         conn = sqlite3.connect('baza.sqlite')
         c = conn.cursor()
@@ -175,11 +197,9 @@ def handle_text(message):
         if arc == 1:
             user_markup = telebot.types.ReplyKeyboardMarkup(True, False)
             user_markup.row('/help', '/stop')
-            user_markup.row('🍕Пицца🍕', '🥛Вода🥛')
-            user_markup.row('Суши', 'Кола')
-            user_markup.row('👝Корзина👝')
+            user_markup.row('продукты', 'карзина')
             bot.send_message(message.chat.id, "#REFRESH", reply_markup=user_markup)
-            state = 0
+            state = -1
         return 0
 
 
