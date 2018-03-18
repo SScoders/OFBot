@@ -1,7 +1,7 @@
 '''OF Bot'''
 
 """
-Version - 4.2
+Version - 4.миллион
 With this bot you can fast and easly order food.
 Based on SQLite base.
 """
@@ -71,11 +71,11 @@ def handle_text(message):
             user_markup.row('👝Корзина👝')
             bot.send_message(message.chat.id, "#REFRESH", reply_markup=user_markup)
             state = 0
-        elif message.text == 'карзина':
-            user_markup = telebot.types.ReplyKeyboardMarkup(True, False)
+        elif message.text == 'корзина':
             bot.send_message(message.chat.id, karzina, reply_markup=user_markup)
+            user_markup = telebot.types.ReplyKeyboardMarkup(True, False)
             user_markup.row('/help', '/stop')
-            user_markup.row('продукты', 'карзина')
+            user_markup.row('продукты', '👝Корзина👝')
             state = -1
     if state == 0:
         conn = sqlite3.connect('baza.sqlite')
@@ -197,9 +197,10 @@ def handle_text(message):
         if arc == 1:
             user_markup = telebot.types.ReplyKeyboardMarkup(True, False)
             user_markup.row('/help', '/stop')
-            user_markup.row('продукты', 'карзина')
+            user_markup.row('продукты', '👝Корзина👝')
             bot.send_message(message.chat.id, "#REFRESH", reply_markup=user_markup)
             state = -1
+
         return 0
 
 
